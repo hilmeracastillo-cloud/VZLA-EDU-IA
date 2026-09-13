@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* iOS Safe Area & Landscape Reading Support */
+:root {
+  --sat: env(safe-area-inset-top, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+}
+
+/* Ensure body respects safe areas and prevents horizontal jitter */
+html, body {
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Landscape orientation optimizations for mobile reading */
+@media screen and (orientation: landscape) and (max-height: 550px) {
+  .landscape-compact-header {
+    height: 3.25rem !important;
+  }
+  .landscape-reading-padding {
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px)) !important;
+  }
+}
+
+/* Safe area padding utilities */
+.safe-px {
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+
+.safe-pb {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}

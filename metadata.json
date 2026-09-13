@@ -1,0 +1,6 @@
+{
+  "name": "Venezuela, Educación e IA - Lector Editorial",
+  "description": "Lector digital de investigación académica para 'Venezuela, Educación e Inteligencia Artificial: Tormenta de Oportunidades' por Hilmer Castillo Bescanza.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
