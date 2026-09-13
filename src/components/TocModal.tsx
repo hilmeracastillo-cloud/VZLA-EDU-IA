@@ -178,7 +178,9 @@ export const TocModal: React.FC<TocModalProps> = ({
                                     onSelectChapter(chap.id, sub.id);
                                     onClose();
                                   }}
-                                  className="flex items-center gap-2 py-1 px-2 rounded hover:bg-[#202020] text-neutral-400 hover:text-indigo-300 transition-colors text-left cursor-pointer"
+                                  className={`flex items-center gap-2 py-1 px-2 rounded hover:bg-[#202020] text-neutral-400 hover:text-indigo-300 transition-colors text-left cursor-pointer ${
+                                    sub.level === 3 ? 'pl-4 text-neutral-400' : sub.level === 4 ? 'pl-6 text-neutral-500 text-[11px]' : ''
+                                  }`}
                                 >
                                   <Hash className="w-3 h-3 text-neutral-600 shrink-0" />
                                   <span className="truncate">{sub.title}</span>

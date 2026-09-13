@@ -46,6 +46,8 @@ def sanitize_urls(text):
     return res
 
 def clean_txt(t):
+    if not t:
+        return ""
     cleaned = ' '.join(t.split())
     return sanitize_urls(cleaned)
 
@@ -55,13 +57,20 @@ def escape_ts(s):
 def extract_citations(text):
     return re.findall(r'\[([0-9]+\.[0-9]+)\]', text)
 
-def is_subheading_line(txt):
-    t = txt.strip()
-    return bool(re.match(r'^(Oportunidad(es)?\s+(Medular(es)?|Funcional(es)?|Estructurales?)|Oportunidad\s+\d+:?|Destrezas para La Vida|Objetivos:|Ejemplos de actividades:)\s*$', t, re.I))
+def strip_md(s):
+    return re.sub(r'[*_#]+', '', s).strip()
+
+def is_h3_subheading(txt):
+    t = strip_md(txt)
+    return bool(re.match(r'^(Oportunidades?\s+(Medular(es)?|Funcional(es)?|Estructurales?)|Destrezas para La Vida|Aprendizajes para La vida)\s*$', t, re.I))
+
+def is_h4_subheading(txt):
+    t = strip_md(txt)
+    return bool(re.match(r'^(Oportunidad\s+\d+:?|Objetivos:|Ejemplos de actividades:|Cuáles son los objetivos finales:?|Análisis por Ejes Productivos Regionales:?|Distribución Curricular de Destrezas para La Vida:?)\s*$', t, re.I))
 
 def is_numbered_line(txt):
-    t = txt.strip()
-    return bool(re.match(r'^(\d+[\.\)]|[a-zA-Z][\.\)])\s*', t))
+    t = strip_md(txt)
+    return bool(re.match(r'^(\d+[\.\)]|[a-zA-Z][\.\)])\s+', t))
 
 def flush_list(blocks, c_list, prefix):
     if not c_list:
@@ -78,7 +87,7 @@ def flush_list(blocks, c_list, prefix):
 
 def parse_ref_item(raw_text):
     text = clean_txt(raw_text)
-    m = re.match(r'\[([0-9]+)\.([0-9]+)\]\s*(.*)', text)
+    m = re.match(r'^(?:\*\*)?\[([0-9]+)\.([0-9]+)\](?:\*\*)?\s*(.*)', text)
     if not m:
         return None
     part_num = m.group(1)
@@ -95,7 +104,7 @@ def parse_ref_item(raw_text):
     year_m = re.search(r'\((\d{4}[^\)]*)\)', clean)
     year = year_m.group(1).strip() if year_m else "s.f."
     
-    # Extract author (up to dot or parenthesis, or fallback)
+    # Extract author
     auth_m = re.match(r'^([^\.\(\)]+)(?:\.|\s*\()', clean)
     author = auth_m.group(1).strip() if auth_m else f"Referencia {code}"
     
@@ -119,6 +128,23 @@ def parse_ref_item(raw_text):
         "year": year,
         "title": final_title or author
     }
+
+def format_block_ts(b):
+    out = f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
+    if "text" in b:
+        out += f"      text: `{escape_ts(b['text'])}`,\n"
+    if "items" in b:
+        out += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
+    if "tableData" in b:
+        out += f"      tableData: {json.dumps(b['tableData'], ensure_ascii=False, indent=8).strip()},\n"
+    if "stats" in b:
+        out += f"      stats: {json.dumps(b['stats'], ensure_ascii=False, indent=8).strip()},\n"
+    if b.get("hangingIndent"):
+        out += f"      hangingIndent: true,\n"
+    if b.get("footnoteIds"):
+        out += f"      footnoteIds: {json.dumps(b['footnoteIds'])},\n"
+    out += "    },\n"
+    return out
 
 # ==============================================================================
 # 1. BOOK METADATA
@@ -168,10 +194,11 @@ sub_sections_intro = [
 
 cur_list = []
 for el in intro_elements[1:]:
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     is_list = el.get('is_list') or el.get('style') == 'ListParagraph'
+    has_hanging = el.get('has_hanging')
     
     if "En el entrenamiento en Metodología de la Enseñanza" in txt:
         flush_list(intro_blocks, cur_list, "intro")
@@ -197,7 +224,8 @@ for el in intro_elements[1:]:
         intro_blocks.append({
             "id": f"intro-p-{len(intro_blocks)}",
             "type": b_type,
-            "text": txt
+            "text": txt,
+            "hangingIndent": has_hanging
         })
 flush_list(intro_blocks, cur_list, "intro")
 
@@ -217,13 +245,7 @@ export const introductionChapter: Chapter = {{
   blocks: [
 """
 for b in intro_blocks:
-    intro_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        intro_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        intro_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    intro_ts += "    },\n"
-
+    intro_ts += format_block_ts(b)
 intro_ts += """  ],
   footnotes: {},
   references: [],
@@ -243,18 +265,19 @@ sub_sections_exec = [
     {"id": "exec-situacion-ia", "title": "¿Cuál es la situación del uso de la IA en la Educación Básica en el Mundo?", "level": 2},
     {"id": "exec-tormenta", "title": "¿Cómo aprovechar la Tormenta de Oportunidades que se presentarán?", "level": 2},
     {"id": "exec-medulares", "title": "Oportunidades Medulares (1, 2, 3)", "level": 3},
-    {"id": "exec-funcionales", "title": "Oportunidades Funcionales (4)", "level": 3},
+    {"id": "exec-funcionales", "title": "Oportunidad Funcional (4)", "level": 3},
     {"id": "exec-estructurales", "title": "Oportunidades Estructurales (5, 6, 7)", "level": 3},
 ]
 
 cur_list = []
 for el in exec_elements[1:]:
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     txt = txt.replace("¡El reto es inmenso", "El reto es inmenso")
     txt = txt.replace("hacer A la Venezolana!", "hacer ¡A la Venezolana!")
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
     
     if st == 'Heading2':
@@ -263,7 +286,7 @@ for el in exec_elements[1:]:
         exec_blocks.append({"id": h_id, "type": "heading2", "text": txt})
         continue
     
-    if is_subheading_line(txt):
+    if is_h3_subheading(txt):
         flush_list(exec_blocks, cur_list, "exec")
         sub_id = f"exec-sub-{len(exec_blocks)}"
         if "Oportunidades Medulares" in txt:
@@ -272,32 +295,38 @@ for el in exec_elements[1:]:
             sub_id = "exec-funcionales"
         elif "Oportunidades Estructurales" in txt:
             sub_id = "exec-estructurales"
-        clean_heading = re.sub(r'^(Oportunidad\s+\d+):$', r'\1', txt)
-        exec_blocks.append({"id": sub_id, "type": "heading3", "text": clean_heading})
+        exec_blocks.append({"id": sub_id, "type": "heading3", "text": txt})
         continue
 
-    # If it is a numbered line
-    if is_numbered_line(txt):
-        # If cur_list had unnumbered items, flush
-        if cur_list and not any(is_numbered_line(x) for x in cur_list):
-            flush_list(exec_blocks, cur_list, "exec")
-        cur_list.append(txt)
+    if is_h4_subheading(txt):
+        flush_list(exec_blocks, cur_list, "exec")
+        exec_blocks.append({"id": f"exec-h4-{len(exec_blocks)}", "type": "heading4", "text": txt})
+        continue
+
+    # Hanging indent paragraphs (e.g. 1. Casi 4 millones..., **1. Medulares:**, **Nivel Bajo:**)
+    if has_hanging or re.match(r'^(?:\*\*)?(\d+[\.\)]|[a-zA-Z][\.\)]|Nivel\s+(Bajo|Medio|Alto):?)', strip_md(txt)):
+        flush_list(exec_blocks, cur_list, "exec")
+        exec_blocks.append({
+            "id": f"exec-p-{len(exec_blocks)}",
+            "type": "paragraph",
+            "text": txt,
+            "hangingIndent": True
+        })
         continue
 
     # If it ends with colon or is plain paragraph
-    if txt.endswith(':') or txt.startswith('Establecer los niveles') or not is_list:
+    if txt.endswith(':') or not is_list:
         flush_list(exec_blocks, cur_list, "exec")
         b_type = "lead" if len(exec_blocks) == 0 else "paragraph"
         exec_blocks.append({
             "id": f"exec-p-{len(exec_blocks)}",
             "type": b_type,
-            "text": txt
+            "text": txt,
+            "hangingIndent": has_hanging
         })
         continue
 
-    # Otherwise it is an unnumbered bullet list item
-    if cur_list and any(is_numbered_line(x) for x in cur_list):
-        flush_list(exec_blocks, cur_list, "exec")
+    # Otherwise it is a list item
     cur_list.append(txt)
 
 flush_list(exec_blocks, cur_list, "exec")
@@ -319,13 +348,7 @@ export const executiveSummaryChapter: Chapter = {{
   blocks: [
 """
 for b in exec_blocks:
-    exec_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        exec_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        exec_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    exec_ts += "    },\n"
-
+    exec_ts += format_block_ts(b)
 exec_ts += """  ],
   footnotes: {},
   references: [],
@@ -344,7 +367,7 @@ part1_refs = elements[267:280]
 p1_ref_items = []
 p1_footnotes = {}
 for el in part1_refs[1:]:
-    ref = parse_ref_item(el['text'])
+    ref = parse_ref_item(el.get('text', ''))
     if ref:
         p1_ref_items.append({
             "id": ref["ref_id"],
@@ -373,7 +396,7 @@ p1_subsections = [
 
 p1_blocks = []
 cur_list = []
-for el in part1_body[2:]: # Skip PARTE 1 and ¿Dónde estamos?
+for el in part1_body[2:]:
     if el['type'] == 'table':
         flush_list(p1_blocks, cur_list, "p1")
         headers = el['rows'][0]
@@ -389,10 +412,11 @@ for el in part1_body[2:]: # Skip PARTE 1 and ¿Dónde estamos?
         })
         continue
 
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
 
     if st == 'Heading2':
@@ -429,6 +453,7 @@ for el in part1_body[2:]: # Skip PARTE 1 and ¿Dónde estamos?
         "id": f"p1-b-{len(p1_blocks)}",
         "type": b_type,
         "text": txt,
+        "hangingIndent": has_hanging,
         "footnoteIds": fn_ids if fn_ids else None
     })
 flush_list(p1_blocks, cur_list, "p1")
@@ -449,17 +474,7 @@ export const part1Chapter: Chapter = {{
   blocks: [
 """
 for b in p1_blocks:
-    p1_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        p1_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        p1_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    if "tableData" in b:
-        p1_ts += f"      tableData: {json.dumps(b['tableData'], ensure_ascii=False, indent=8).strip()},\n"
-    if b.get("footnoteIds"):
-        p1_ts += f"      footnoteIds: {json.dumps(b['footnoteIds'])},\n"
-    p1_ts += "    },\n"
-
+    p1_ts += format_block_ts(b)
 p1_ts += f"""  ],
   footnotes: {json.dumps(p1_footnotes, ensure_ascii=False, indent=4)},
   references: {json.dumps(p1_ref_items, ensure_ascii=False, indent=4)},
@@ -478,7 +493,7 @@ part2_refs = elements[441:516]
 p2_ref_items = []
 p2_footnotes = {}
 for el in part2_refs[1:]:
-    ref = parse_ref_item(el['text'])
+    ref = parse_ref_item(el.get('text', ''))
     if ref:
         p2_ref_items.append({
             "id": ref["ref_id"],
@@ -529,10 +544,11 @@ for el in part2_body[2:]:
         table_idx += 1
         continue
 
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
 
     if st == 'Heading2':
@@ -566,6 +582,7 @@ for el in part2_body[2:]:
         "id": f"p2-b-{len(p2_blocks)}",
         "type": "paragraph",
         "text": txt,
+        "hangingIndent": has_hanging,
         "footnoteIds": fn_ids if fn_ids else None
     })
 flush_list(p2_blocks, cur_list, "p2")
@@ -586,17 +603,7 @@ export const part2Chapter: Chapter = {{
   blocks: [
 """
 for b in p2_blocks:
-    p2_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        p2_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        p2_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    if "tableData" in b:
-        p2_ts += f"      tableData: {json.dumps(b['tableData'], ensure_ascii=False, indent=8).strip()},\n"
-    if b.get("footnoteIds"):
-        p2_ts += f"      footnoteIds: {json.dumps(b['footnoteIds'])},\n"
-    p2_ts += "    },\n"
-
+    p2_ts += format_block_ts(b)
 p2_ts += f"""  ],
   footnotes: {json.dumps(p2_footnotes, ensure_ascii=False, indent=4)},
   references: {json.dumps(p2_ref_items, ensure_ascii=False, indent=4)},
@@ -615,7 +622,7 @@ part3_refs = elements[875:946]
 p3_ref_items = []
 p3_footnotes = {}
 for el in part3_refs[1:]:
-    ref = parse_ref_item(el['text'])
+    ref = parse_ref_item(el.get('text', ''))
     if ref:
         p3_ref_items.append({
             "id": ref["ref_id"],
@@ -671,10 +678,11 @@ for el in part3_body[2:]:
         p3_table_idx += 1
         continue
 
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
 
     if st in ['Heading2', 'Heading3']:
@@ -687,11 +695,20 @@ for el in part3_body[2:]:
         })
         continue
 
-    if is_subheading_line(txt):
+    if is_h3_subheading(txt):
         flush_list(p3_blocks, cur_list, "p3")
         p3_blocks.append({
             "id": f"p3-sub-{len(p3_blocks)}",
             "type": "heading3",
+            "text": txt
+        })
+        continue
+
+    if is_h4_subheading(txt):
+        flush_list(p3_blocks, cur_list, "p3")
+        p3_blocks.append({
+            "id": f"p3-h4-{len(p3_blocks)}",
+            "type": "heading4",
             "text": txt
         })
         continue
@@ -715,6 +732,7 @@ for el in part3_body[2:]:
             "id": f"p3-b-{len(p3_blocks)}",
             "type": "paragraph",
             "text": txt,
+            "hangingIndent": has_hanging,
             "footnoteIds": fn_ids if fn_ids else None
         })
         if "NEMA: módulos transportables sobre contenedores" in txt:
@@ -755,19 +773,7 @@ export const part3Chapter: Chapter = {{
   blocks: [
 """
 for b in p3_blocks:
-    p3_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        p3_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        p3_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    if "tableData" in b:
-        p3_ts += f"      tableData: {json.dumps(b['tableData'], ensure_ascii=False, indent=8).strip()},\n"
-    if "stats" in b:
-        p3_ts += f"      stats: {json.dumps(b['stats'], ensure_ascii=False, indent=8).strip()},\n"
-    if b.get("footnoteIds"):
-        p3_ts += f"      footnoteIds: {json.dumps(b['footnoteIds'])},\n"
-    p3_ts += "    },\n"
-
+    p3_ts += format_block_ts(b)
 p3_ts += f"""  ],
   footnotes: {json.dumps(p3_footnotes, ensure_ascii=False, indent=4)},
   references: {json.dumps(p3_ref_items, ensure_ascii=False, indent=4)},
@@ -838,7 +844,7 @@ for el in app1_elements:
         continue
     
     if current_case:
-        clean = txt.lstrip('•').strip()
+        clean = re.sub(r'[*•\s]+', ' ', txt).strip()
         if clean.startswith('Descripción de la dinámica escolar diaria:'):
             current_case['dailyRoutine'] = clean.split(':', 1)[1].strip()
         elif clean.startswith('Rol de los profesores:'):
@@ -863,10 +869,11 @@ if current_case:
 
 cur_list = []
 for el in app1_elements[1:]:
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
 
     if st == 'Heading2' or re.match(r'^2\.1\.\d+\.', txt):
@@ -894,7 +901,8 @@ for el in app1_elements[1:]:
     app1_blocks.append({
         "id": f"ap1-p-{len(app1_blocks)}",
         "type": "paragraph",
-        "text": txt
+        "text": txt,
+        "hangingIndent": has_hanging or txt.startswith('•')
     })
 flush_list(app1_blocks, cur_list, "ap1")
 
@@ -916,13 +924,7 @@ export const appendix1Chapter: Chapter = {{
   blocks: [
 """
 for b in app1_blocks:
-    app1_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        app1_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        app1_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    app1_ts += "    },\n"
-
+    app1_ts += format_block_ts(b)
 app1_ts += """  ],
   footnotes: {},
   references: [],
@@ -969,7 +971,7 @@ for el in app2_elements:
         continue
     
     if current_plat:
-        clean = txt.lstrip('•').strip()
+        clean = re.sub(r'[*•\s]+', ' ', txt).strip()
         if clean.startswith('Fundamentos:'):
             current_plat['pedagogicalFoundations'] = clean.split(':', 1)[1].strip()
         elif clean.startswith('Desarrollo / Editoriales:'):
@@ -984,10 +986,11 @@ if current_plat:
 
 cur_list = []
 for el in app2_elements[1:]:
-    txt = clean_txt(el['text'])
+    txt = clean_txt(el.get('text', ''))
     if not txt:
         continue
     st = el.get('style')
+    has_hanging = el.get('has_hanging')
     is_list = el.get('is_list') or st == 'ListParagraph'
 
     if st == 'Heading2' or re.match(r'^2\.2\.9\.\d+\.', txt):
@@ -1015,13 +1018,14 @@ for el in app2_elements[1:]:
     app2_blocks.append({
         "id": f"ap2-p-{len(app2_blocks)}",
         "type": "paragraph",
-        "text": txt
+        "text": txt,
+        "hangingIndent": has_hanging or txt.startswith('•')
     })
 flush_list(app2_blocks, cur_list, "ap2")
 
-app2_ts = f"""import {{ Chapter, PlatformDetail }} from '../types';
+app2_ts = f"""import {{ Chapter, AIToolPlatform }} from '../types';
 
-export const platformsList: PlatformDetail[] = {json.dumps(platforms_list, ensure_ascii=False, indent=2)};
+export const aiPlatformsList: AIToolPlatform[] = {json.dumps(platforms_list, ensure_ascii=False, indent=2)};
 
 export const appendix2Chapter: Chapter = {{
   id: 'apendice-2',
@@ -1029,21 +1033,15 @@ export const appendix2Chapter: Chapter = {{
   part: 'Apéndices',
   partNumber: 'A2',
   number: 'A.2',
-  title: 'Apéndice 2: Fichas Técnicas de los 13 Softwares de IA',
-  subtitle: 'Especificaciones técnicas, modelos pedagógicos y costos de licenciamiento',
+  title: 'Apéndice 2: Plataformas y Herramientas de IA para la Educación Básica',
+  subtitle: 'Fichas descriptivas del software evaluado en los 25 casos de estudio mundiales',
   author: 'Hilmer Castillo Bescanza',
   readingTimeMinutes: 20,
   subSections: {json.dumps(sub_sections_app2, ensure_ascii=False, indent=4)},
   blocks: [
 """
 for b in app2_blocks:
-    app2_ts += f"    {{\n      id: '{b['id']}',\n      type: '{b['type']}',\n"
-    if "text" in b:
-        app2_ts += f"      text: `{escape_ts(b['text'])}`,\n"
-    if "items" in b:
-        app2_ts += f"      items: {json.dumps(b['items'], ensure_ascii=False, indent=8).strip()},\n"
-    app2_ts += "    },\n"
-
+    app2_ts += format_block_ts(b)
 app2_ts += """  ],
   footnotes: {},
   references: [],
@@ -1052,4 +1050,4 @@ app2_ts += """  ],
 with open('src/data/appendix2.ts', 'w', encoding='utf-8') as f:
     f.write(app2_ts)
 print("Updated src/data/appendix2.ts")
-print("All 8 data files have been regenerated successfully!")
+print("ALL CHAPTERS REGENERATED WITH BOLD FORMATTING, SUBTITLES HIERARCHY, AND HANGING INDENTS!")

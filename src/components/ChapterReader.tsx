@@ -9,6 +9,7 @@ import {
 import { caseStudiesList } from '../data/appendix1';
 import { platformsList } from '../data/appendix2';
 import { allFootnotesMap, allReferences } from '../data/articles';
+import { RichText } from './RichText';
 import {
   Quote,
   ExternalLink,
@@ -71,86 +72,47 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
     }
   };
 
-  // Font size classes
+  // Font size classes with subtitle hierarchy
   const fontSizes = {
     sm: {
       body: 'text-[15px] leading-[1.7]',
       lead: 'text-[17px] leading-[1.7]',
       h2: 'text-xl sm:text-2xl',
       h3: 'text-lg sm:text-xl',
+      h4: 'text-base sm:text-lg',
     },
     base: {
       body: 'text-[17px] leading-[1.75]',
       lead: 'text-[19px] leading-[1.75]',
       h2: 'text-2xl sm:text-3xl',
       h3: 'text-xl sm:text-2xl',
+      h4: 'text-lg sm:text-xl',
     },
     lg: {
       body: 'text-[19.5px] leading-[1.8]',
       lead: 'text-[22px] leading-[1.8]',
       h2: 'text-3xl sm:text-4xl',
       h3: 'text-2xl sm:text-3xl',
+      h4: 'text-xl sm:text-2xl',
     },
   }[fontSize];
 
-  // Helper to replace "[X.Y]" or "[X.Y.]" citations in strings with clickable interactive buttons
-  const renderTextWithFootnotes = (text: string) => {
+  // Helper to render rich text with bold, italics, citations and hanging indents
+  const renderTextWithFootnotes = (text: string, hangingIndent = false) => {
     if (!text) return null;
-    const parts = text.split(/(\[\d+\.\d+\.?\])/g);
-
-    return parts.map((part, index) => {
-      const match = part.match(/\[(\d+\.\d+)\.?\]/);
-      if (match) {
-        const cleanId = match[1]; // e.g. "1.1"
-        const bracketCode = `[${cleanId}]`;
-
-        // Check current chapter footnotes, global map, or references
-        const rawFootnote =
-          chapter.footnotes[bracketCode] ||
-          chapter.footnotes[cleanId] ||
-          allFootnotesMap[bracketCode] ||
-          allFootnotesMap[cleanId];
-
-        const refItem =
-          chapter.references?.find((r) => r.code === bracketCode || r.id === cleanId || r.id === `ref-${cleanId.replace('.', '-')}`) ||
-          allReferences.find((r) => r.code === bracketCode || r.id === cleanId || r.id === `ref-${cleanId.replace('.', '-')}`);
-
-        const footnote: Footnote = rawFootnote
-          ? {
-              ...rawFootnote,
-              url: rawFootnote.url || refItem?.url,
-            }
-          : refItem
-          ? {
-              id: cleanId,
-              code: bracketCode,
-              title: refItem.citation.replace(/^\[\d+\.\d+\]\s*/, '').replace(refItem.url || '', '').trim(),
-              authorOrSource: refItem.citation.split('.')[0] || 'Fuente de la obra',
-              justification: `Nota o referencia citada en el cuerpo del texto para validación académica.`,
-              url: refItem.url,
-            }
-          : {
-              id: cleanId,
-              code: bracketCode,
-              title: `Referencia citada ${cleanId}`,
-              authorOrSource: 'Fuente de la obra',
-              justification: `Nota al pie citada en el cuerpo del texto para validación académica.`,
-            };
-
-        return (
-          <button
-            key={index}
-            onClick={() => onSelectFootnote(footnote)}
-            title={footnote.title ? `${footnote.title} - ${footnote.authorOrSource}` : `Ver referencia ${bracketCode}`}
-            className="inline-flex items-center mx-1 px-1.5 py-0.5 rounded text-[11px] font-mono font-bold text-indigo-300 bg-indigo-950/70 border border-indigo-700/60 hover:bg-indigo-600 hover:text-white hover:border-indigo-400 transition-all cursor-pointer shadow-sm align-baseline"
-          >
-            {bracketCode}
-          </button>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
+    return (
+      <RichText
+        text={text}
+        hangingIndent={hangingIndent}
+        onSelectFootnote={onSelectFootnote}
+        chapterFootnotes={chapter.footnotes}
+        chapterReferences={chapter.references}
+        allFootnotesMap={allFootnotesMap}
+        allReferences={allReferences}
+      />
+    );
   };
+
 
   // Filtered case studies for Appendix 1
   const filteredCases = caseStudiesList.filter((cs) => {
@@ -285,36 +247,53 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
 
             case 'heading2':
               return (
-                <div key={block.id} id={block.id} className="pt-6 sm:pt-8 scroll-mt-24">
+                <div key={block.id} id={block.id} className="pt-8 sm:pt-10 scroll-mt-24">
                   <h2
-                    className={`font-serif font-bold text-white tracking-tight ${fontSizes.h2} pb-2 border-b border-[#222222]`}
+                    className={`font-serif font-bold text-white tracking-tight ${fontSizes.h2} pb-2.5 border-b border-[#252525]`}
                   >
-                    {block.text}
+                    {renderTextWithFootnotes(block.text || '')}
                   </h2>
                 </div>
               );
 
             case 'heading3':
               return (
-                <div key={block.id} id={block.id} className="pt-4 scroll-mt-24">
+                <div key={block.id} id={block.id} className="pt-6 sm:pt-7 pb-1 scroll-mt-24">
                   <h3
-                    className={`font-serif font-semibold text-indigo-300 tracking-tight ${fontSizes.h3}`}
+                    className={`font-serif font-bold text-indigo-300 tracking-tight ${fontSizes.h3}`}
                   >
-                    {block.text}
+                    {renderTextWithFootnotes(block.text || '')}
                   </h3>
                 </div>
               );
 
-            case 'paragraph':
+            case 'heading4':
+              return (
+                <div key={block.id} id={block.id} className="pt-4 pb-1 scroll-mt-20">
+                  <h4
+                    className={`font-mono text-xs sm:text-sm uppercase tracking-wider font-bold text-amber-300/90 bg-amber-950/20 px-3 py-1.5 rounded-lg border border-amber-800/40 inline-block mb-1`}
+                  >
+                    {renderTextWithFootnotes(block.text || '')}
+                  </h4>
+                </div>
+              );
+
+            case 'paragraph': {
+              const isHanging =
+                block.hangingIndent ||
+                /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\])\s+/i.test(block.text || '');
               return (
                 <p
                   key={block.id}
                   id={block.id}
-                  className={`font-sans text-neutral-300 ${fontSizes.body} tracking-normal text-justify sm:text-left`}
+                  className={`font-sans text-neutral-300 ${fontSizes.body} tracking-normal text-justify sm:text-left ${
+                    isHanging ? 'sangria-francesa' : ''
+                  }`}
                 >
-                  {renderTextWithFootnotes(block.text || '')}
+                  {renderTextWithFootnotes(block.text || '', isHanging)}
                 </p>
               );
+            }
 
             case 'quote':
               return (

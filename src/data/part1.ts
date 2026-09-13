@@ -140,17 +140,17 @@ export const part1Chapter: Chapter = {
       tableData: {
         "caption": "Tabla 1. Indicadores del mercado laboral venezolano, 2015-2024",
         "headers": [
-                "Año",
-                "Población Total (Millones)",
-                "PEA (Millones)",
-                "Participación Laboral Total (%)",
-                "Desempleo Abierto (%)",
-                "Tasa de Informalidad (%)",
-                "Brecha de Participación Femenina"
+                "**Año**",
+                "**Población Total (Millones)**",
+                "**PEA (Millones)**",
+                "**Participación Laboral Total (%)**",
+                "**Desempleo Abierto (%)**",
+                "**Tasa de Informalidad (%)**",
+                "**Brecha de Participación Femenina**"
         ],
         "rows": [
                 [
-                        "2015",
+                        "**2015**",
                         "30,08",
                         "14,20",
                         "64,5%",
@@ -159,7 +159,7 @@ export const part1Chapter: Chapter = {
                         "-16,2%"
                 ],
                 [
-                        "2017",
+                        "**2017**",
                         "29,40",
                         "13,10",
                         "60,5%",
@@ -168,7 +168,7 @@ export const part1Chapter: Chapter = {
                         "-18,1%"
                 ],
                 [
-                        "2019",
+                        "**2019**",
                         "28,20",
                         "11,60",
                         "57,0%",
@@ -177,7 +177,7 @@ export const part1Chapter: Chapter = {
                         "-20,1%"
                 ],
                 [
-                        "2021",
+                        "**2021**",
                         "28,70",
                         "11,45",
                         "58,5%",
@@ -186,7 +186,7 @@ export const part1Chapter: Chapter = {
                         "-21,0%"
                 ],
                 [
-                        "2023",
+                        "**2023**",
                         "29,20",
                         "11,90",
                         "59,5%",
@@ -195,7 +195,7 @@ export const part1Chapter: Chapter = {
                         "-25,0%"
                 ],
                 [
-                        "2024",
+                        "**2024**",
                         "29,37",
                         "12,10",
                         "59,8%",
@@ -379,73 +379,73 @@ export const part1Chapter: Chapter = {
     {
         "id": "ref-1-1",
         "code": "[1.1]",
-        "citation": "[1.1]Caleido Humano & ENCOVI UCAB. (2024). Informe sobre Condiciones de Vida y Colapso del Sistema Educativo Venezolano. Universidad Católica Andrés Bello. https://www.proyectoencovi.com/",
+        "citation": "**[1.1]** Caleido Humano & ENCOVI UCAB. (2024). Informe sobre Condiciones de Vida y Colapso del Sistema Educativo Venezolano. Universidad Católica Andrés Bello. https://www.proyectoencovi.com/",
         "url": "https://www.proyectoencovi.com/"
     },
     {
         "id": "ref-1-2",
         "code": "[1.2]",
-        "citation": "[1.2]HumVenezuela. (2024). Reporte de Monitoreo sobre Emergencia Humanitaria Compleja y Alimentación Escolar en Venezuela. https://reliefweb.int/organization/humvenezuela",
+        "citation": "**[1.2]** HumVenezuela. (2024). Reporte de Monitoreo sobre Emergencia Humanitaria Compleja y Alimentación Escolar en Venezuela. https://reliefweb.int/organization/humvenezuela",
         "url": "https://reliefweb.int/organization/humvenezuela"
     },
     {
         "id": "ref-1-3",
         "code": "[1.3]",
-        "citation": "[1.3]DevTech Systems & ANOVA Policy Research. (2023). Diagnóstico de la Educación Básica en Venezuela. https://devtechsys.com/insights/",
+        "citation": "**[1.3]** DevTech Systems & ANOVA Policy Research. (2023). Diagnóstico de la Educación Básica en Venezuela. https://devtechsys.com/insights/",
         "url": "https://devtechsys.com/insights/"
     },
     {
         "id": "ref-1-4",
         "code": "[1.4]",
-        "citation": "[1.4]Monitor de Derechos Civiles y Educación (UCAB / Excubitus DHE). (2025). Déficit Docente y Crisis Estructural Escolar. https://elucabista.com/",
+        "citation": "**[1.4]** Monitor de Derechos Civiles y Educación (UCAB / Excubitus DHE). (2025). Déficit Docente y Crisis Estructural Escolar. https://elucabista.com/",
         "url": "https://elucabista.com/"
     },
     {
         "id": "ref-1-5",
         "code": "[1.5]",
-        "citation": "[1.5]Ministerio del Poder Popular para la Educación. Currículo Nacional Bolivariano: Diseño Curricular del Sistema Educativo Bolivariano. Caracas, septiembre 2007. https://unesdoc.unesco.org/ark:/48223/pf0000221333",
+        "citation": "**[1.5]** Ministerio del Poder Popular para la Educación. Currículo Nacional Bolivariano: Diseño Curricular del Sistema Educativo Bolivariano. Caracas, septiembre 2007. https://unesdoc.unesco.org/ark:/48223/pf0000221333",
         "url": "https://unesdoc.unesco.org/ark:/48223/pf0000221333"
     },
     {
         "id": "ref-1-6",
         "code": "[1.6]",
-        "citation": "[1.6]Currículo Nacional Bolivariano: Diseño Curricular del Sistema Educativo Bolivariano (texto completo reproducido). Educere, vol. 11, núm. 39, 2007, pp. 751-775. https://ve.scielo.org/pdf/edu/v11n39/art20.pdf",
+        "citation": "**[1.6]** Currículo Nacional Bolivariano: Diseño Curricular del Sistema Educativo Bolivariano (texto completo reproducido). Educere, vol. 11, núm. 39, 2007, pp. 751-775. https://ve.scielo.org/pdf/edu/v11n39/art20.pdf",
         "url": "https://ve.scielo.org/pdf/edu/v11n39/art20.pdf"
     },
     {
         "id": "ref-1-7",
         "code": "[1.7]",
-        "citation": "[1.7]SITEAL IIPE/UNESCO. Resolución 143/2016. Lineamientos del Proceso de Transformación Curricular en todos los Niveles y Modalidades. https://siteal.iiep.unesco.org/pais/venezuela",
+        "citation": "**[1.7]** SITEAL IIPE/UNESCO. Resolución 143/2016. Lineamientos del Proceso de Transformación Curricular en todos los Niveles y Modalidades. https://siteal.iiep.unesco.org/pais/venezuela",
         "url": "https://siteal.iiep.unesco.org/pais/venezuela"
     },
     {
         "id": "ref-1-8",
         "code": "[1.8]",
-        "citation": "[1.8]Maduradas. \"Ministerio de Educación ordenó suspender la aplicación del nuevo currículum\" (anuncio del ministro Elías Jaua, enero 2017). https://maduradas.com/informese-ministro-elias-jaua-ordena-suspender-la-aplicacion-del-nuevo-curriculum/",
+        "citation": "**[1.8]** Maduradas. \"Ministerio de Educación ordenó suspender la aplicación del nuevo currículum\" (anuncio del ministro Elías Jaua, enero 2017). https://maduradas.com/informese-ministro-elias-jaua-ordena-suspender-la-aplicacion-del-nuevo-curriculum/",
         "url": "https://maduradas.com/informese-ministro-elias-jaua-ordena-suspender-la-aplicacion-del-nuevo-curriculum/"
     },
     {
         "id": "ref-1-9",
         "code": "[1.9]",
-        "citation": "[1.9]El Ucabista (Escuela de Educación UCAB). \"Consideraciones de la UCAB sobre reorganización curricular impulsada por MinEducación\". 1 de octubre de 2025. https://elucabista.com/2025/10/01/educacion-ucab-propuesta-de-reorganizacion-de-contenidos-del-ministerio-pudiera-generar-impacto-positivo/",
+        "citation": "**[1.9]** El Ucabista (Escuela de Educación UCAB). \"Consideraciones de la UCAB sobre reorganización curricular impulsada por MinEducación\". 1 de octubre de 2025. https://elucabista.com/2025/10/01/educacion-ucab-propuesta-de-reorganizacion-de-contenidos-del-ministerio-pudiera-generar-impacto-positivo/",
         "url": "https://elucabista.com/2025/10/01/educacion-ucab-propuesta-de-reorganizacion-de-contenidos-del-ministerio-pudiera-generar-impacto-positivo/"
     },
     {
         "id": "ref-1-10",
         "code": "[1.10]",
-        "citation": "[1.10]El Nacional. \"Ministerio de Educación lanza plan nacional para renovar materias\". 24 de junio de 2025. https://www.elnacional.com/2025/06/ministerio-de-educacion-lanza-plan-nacional-para-renovar-materias/",
+        "citation": "**[1.10]** El Nacional. \"Ministerio de Educación lanza plan nacional para renovar materias\". 24 de junio de 2025. https://www.elnacional.com/2025/06/ministerio-de-educacion-lanza-plan-nacional-para-renovar-materias/",
         "url": "https://www.elnacional.com/2025/06/ministerio-de-educacion-lanza-plan-nacional-para-renovar-materias/"
     },
     {
         "id": "ref-1-11",
         "code": "[1.11]",
-        "citation": "[1.11]SITEAL Instituto Internacional de Planeamiento de la Educación (IIPE) de la Organización de las Naciones Unidas para la Educación, la Ciencia y la Cultura (UNESCO). Perfil del país Venezuela. https://siteal.iiep.unesco.org/pais/venezuela",
+        "citation": "**[1.11]** SITEAL Instituto Internacional de Planeamiento de la Educación (IIPE) de la Organización de las Naciones Unidas para la Educación, la Ciencia y la Cultura (UNESCO). Perfil del país Venezuela. https://siteal.iiep.unesco.org/pais/venezuela",
         "url": "https://siteal.iiep.unesco.org/pais/venezuela"
     },
     {
         "id": "ref-1-12",
         "code": "[1.12]",
-        "citation": "[1.12]Organización Internacional del Trabajo - ILOSTAT. (2025). Country Profiles: Venezuela Labor Force and Informality Statistics. https://ilostat.ilo.org/data/",
+        "citation": "**[1.12]** Organización Internacional del Trabajo - ILOSTAT. (2025). Country Profiles: Venezuela Labor Force and Informality Statistics. https://ilostat.ilo.org/data/",
         "url": "https://ilostat.ilo.org/data/"
     }
 ],

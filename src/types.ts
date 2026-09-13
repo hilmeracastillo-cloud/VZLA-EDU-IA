@@ -27,6 +27,7 @@ export type ContentBlockType =
   | 'paragraph'
   | 'heading2'
   | 'heading3'
+  | 'heading4'
   | 'lead'
   | 'callout'
   | 'quote'
@@ -60,6 +61,7 @@ export interface ContentBlock {
   text?: string;
   html?: string;
   items?: string[];
+  hangingIndent?: boolean;
   quoteAuthor?: string;
   stats?: StatItem[];
   tableData?: TableData;
@@ -70,7 +72,7 @@ export interface ContentBlock {
 export interface SubSection {
   id: string;
   title: string;
-  level: 2 | 3;
+  level: 2 | 3 | 4;
 }
 
 export interface Chapter {
@@ -132,3 +134,6 @@ export interface PlatformDetail {
   teacherStudentRatio: string;
   highlights: string[];
 }
+
+export type AIToolPlatform = PlatformDetail;
+

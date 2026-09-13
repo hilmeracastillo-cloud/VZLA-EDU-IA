@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { executiveSummaryChapter } from '../data/executiveSummary';
 import { bookMeta } from '../data/bookMeta';
+import { RichText } from './RichText';
 
 interface ExecutiveSummaryStandaloneProps {
   onBackToMenu: () => void;
@@ -199,34 +200,53 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
                     id={block.id}
                     className="font-serif italic text-lg sm:text-xl text-neutral-200 border-l-2 border-cyan-500 pl-4 sm:pl-6 py-1 my-4 bg-gradient-to-r from-cyan-950/20 to-transparent"
                   >
-                    {block.text}
+                    <RichText text={block.text || ''} />
                   </div>
                 );
 
               case 'heading2':
                 return (
-                  <div key={block.id} id={block.id} className="pt-6 scroll-mt-20">
+                  <div key={block.id} id={block.id} className="pt-7 scroll-mt-20">
                     <h3 className="font-serif font-bold text-white text-xl sm:text-2xl pb-2 border-b border-[#252525]">
-                      {block.text}
+                      <RichText text={block.text || ''} />
                     </h3>
                   </div>
                 );
 
               case 'heading3':
                 return (
-                  <div key={block.id} id={block.id} className="pt-3 scroll-mt-20">
-                    <h4 className="font-serif font-semibold text-cyan-300 text-lg">
-                      {block.text}
+                  <div key={block.id} id={block.id} className="pt-4 scroll-mt-20">
+                    <h4 className="font-serif font-bold text-cyan-300 text-lg sm:text-xl">
+                      <RichText text={block.text || ''} />
                     </h4>
                   </div>
                 );
 
-              case 'paragraph':
+              case 'heading4':
                 return (
-                  <p key={block.id} id={block.id} className="text-neutral-300 text-justify sm:text-left leading-relaxed">
-                    {block.text}
+                  <div key={block.id} id={block.id} className="pt-3 scroll-mt-16">
+                    <h5 className="font-mono text-xs sm:text-sm uppercase tracking-wider font-bold text-amber-300/90 bg-amber-950/20 px-3 py-1 rounded-md border border-amber-800/40 inline-block">
+                      <RichText text={block.text || ''} />
+                    </h5>
+                  </div>
+                );
+
+              case 'paragraph': {
+                const isHanging =
+                  block.hangingIndent ||
+                  /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\])\s+/i.test(block.text || '');
+                return (
+                  <p
+                    key={block.id}
+                    id={block.id}
+                    className={`text-neutral-300 text-justify sm:text-left leading-relaxed ${
+                      isHanging ? 'sangria-francesa' : ''
+                    }`}
+                  >
+                    <RichText text={block.text || ''} hangingIndent={isHanging} />
                   </p>
                 );
+              }
 
               case 'table':
                 return (
@@ -276,7 +296,7 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
                         <span className="font-semibold text-cyan-400 font-mono text-xs mt-1">
                           {idx + 1}.
                         </span>
-                        <span>{item}</span>
+                        <span><RichText text={item} /></span>
                       </li>
                     ))}
                   </ol>
@@ -292,11 +312,12 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
                     {block.items?.map((item, idx) => (
                       <li key={idx} className="flex items-start gap-2.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0 mt-2" />
-                        <span>{item}</span>
+                        <span><RichText text={item} /></span>
                       </li>
                     ))}
                   </ul>
                 );
+
 
               case 'callout':
                 return (

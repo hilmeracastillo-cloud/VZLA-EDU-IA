@@ -34,3 +34,39 @@ html, body {
 .safe-pb {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
 }
+
+/* Sangría francesa (hanging indent) editorial para citas, referencias y listas indentadas */
+.sangria-francesa {
+  padding-left: 1.75rem;
+  text-indent: -1.75rem;
+}
+
+@media (min-width: 640px) {
+  .sangria-francesa {
+    padding-left: 2.25rem;
+    text-indent: -2.25rem;
+  }
+}
+
+.sangria-francesa-ref {
+  padding-left: 2.75rem;
+  text-indent: -2.75rem;
+}
+
+@media (min-width: 640px) {
+  .sangria-francesa-ref {
+    padding-left: 3.5rem;
+    text-indent: -3.5rem;
+  }
+}
+
+.sangria-francesa-sm {
+  padding-left: 1.25rem;
+  text-indent: -1.25rem;
+}
+
+/* Enhancing strong/bold contrast */
+strong {
+  font-weight: 700;
+}
+

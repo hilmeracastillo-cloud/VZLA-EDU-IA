@@ -16,7 +16,7 @@ export const bookMeta: BookMetadata = {
   subtitle: 'Tormenta de Oportunidades',
   program: 'Programa Esta Tierra de Gracia',
   author: 'Hilmer Castillo Bescanza',
-  email: 'Hilmeracastillo@gmail.com',
+  email: 'Hilmer.castillo@comcast.net',
   date: 'Septiembre 2026',
   version: '1.0.0',
   totalChapters: 7,
