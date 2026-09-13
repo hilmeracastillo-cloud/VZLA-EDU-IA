@@ -162,8 +162,8 @@ export const part3Chapter: Chapter = {
 ],
     },
     {
-      id: 'p3-b-15',
-      type: 'paragraph',
+      id: 'p3-sub-15',
+      type: 'heading3',
       text: `**Oportunidad Funcional**`,
     },
     {

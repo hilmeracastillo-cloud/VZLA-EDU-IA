@@ -222,29 +222,50 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
                   </div>
                 );
 
-              case 'heading4':
+              case 'heading4': {
+                const text = block.text || '';
+                const isOportunidad = /^(\*\*)?Oportunidad(es)?\s+\d+/i.test(text.trim());
+                if (isOportunidad) {
+                  return (
+                    <div key={block.id} id={block.id} className="pt-6 pb-2 scroll-mt-16">
+                      <h4 className="font-serif font-bold text-white text-[18px] sm:text-[20px] tracking-tight">
+                        <RichText text={text} />
+                      </h4>
+                    </div>
+                  );
+                }
                 return (
-                  <div key={block.id} id={block.id} className="pt-3 scroll-mt-16">
-                    <h5 className="font-mono text-xs sm:text-sm uppercase tracking-wider font-bold text-amber-300/90 bg-amber-950/20 px-3 py-1 rounded-md border border-amber-800/40 inline-block">
-                      <RichText text={block.text || ''} />
+                  <div key={block.id} id={block.id} className="pt-5 pb-1 scroll-mt-16">
+                    <h5 className="font-serif font-bold text-cyan-200 text-base sm:text-lg tracking-tight">
+                      <RichText text={text} />
                     </h5>
                   </div>
                 );
+              }
 
               case 'paragraph': {
+                const text = block.text || '';
+                const isOportunidad = /^(\*\*)?Oportunidad(es)?\s+\d+/i.test(text.trim());
+                if (isOportunidad) {
+                  return (
+                    <div key={block.id} id={block.id} className="pt-6 pb-2 scroll-mt-16">
+                      <h4 className="font-serif font-bold text-white text-[18px] sm:text-[20px] tracking-tight">
+                        <RichText text={text} />
+                      </h4>
+                    </div>
+                  );
+                }
                 const isHanging =
                   block.hangingIndent ||
-                  /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\])\s+/i.test(block.text || '');
+                  /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\]|\*\*[•\-\*]|\*\*(\d+[\.\)]|[a-zA-Z][\.\)]))\s+/i.test(text.trim());
                 return (
-                  <p
+                  <div
                     key={block.id}
                     id={block.id}
-                    className={`text-neutral-300 text-justify sm:text-left leading-relaxed ${
-                      isHanging ? 'sangria-francesa' : ''
-                    }`}
+                    className="text-neutral-300 text-justify sm:text-left leading-relaxed my-2"
                   >
-                    <RichText text={block.text || ''} hangingIndent={isHanging} />
-                  </p>
+                    <RichText text={text} hangingIndent={isHanging} />
+                  </div>
                 );
               }
 

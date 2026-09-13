@@ -9,7 +9,7 @@ export const executiveSummaryChapter: Chapter = {
   title: 'Resumen Ejecutivo',
   subtitle: 'Hoja de ruta y síntesis estratégica para la transformación educativa',
   author: 'Hilmer Castillo Bescanza',
-  authorEmail: 'hilmer.castillo@comcast.net',
+  authorEmail: 'hilmeracastillo@gmail.com',
   readingTimeMinutes: 7,
   subSections: [
     {
@@ -311,7 +311,7 @@ export const executiveSummaryChapter: Chapter = {
     {
       id: 'exec-h4-47',
       type: 'heading4',
-      text: `**Oportunidad 3:**`,
+      text: `**Oportunidad 3**`,
     },
     {
       id: 'exec-p-48',
@@ -336,8 +336,8 @@ export const executiveSummaryChapter: Chapter = {
 ],
     },
     {
-      id: 'exec-p-50',
-      type: 'paragraph',
+      id: 'exec-funcionales',
+      type: 'heading3',
       text: `**Oportunidad Funcional**`,
     },
     {

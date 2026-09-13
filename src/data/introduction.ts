@@ -8,7 +8,7 @@ export const introductionChapter: Chapter = {
   number: '0.1',
   title: 'Introducción',
   author: 'Hilmer Castillo Bescanza',
-  authorEmail: 'hilmer.castillo@comcast.net',
+  authorEmail: 'hilmeracastillo@gmail.com',
   readingTimeMinutes: 5,
   subSections: [
     {

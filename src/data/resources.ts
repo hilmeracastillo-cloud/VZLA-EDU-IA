@@ -112,7 +112,7 @@ export const WORK_RESOURCES: ResourceItem[] = [
     title: '5-. Documento Interactivo',
     subtitle: 'Navegación Digital & Lectura Integral (100 Páginas)',
     description:
-      'Lector editorial enriquecido con índice dinámico analítico, aparato crítico de 28+ notas al pie interactivas, referencias académicas enlazadas, búsqueda en tiempo real, modo horizontal para teléfonos y el Resumen Ejecutivo integrado en su índice.',
+      'Propuesta Completa, con referencias activas a lo largo del texto que permiten acceder a las fuentes bibliográficas del documento. El lector puede cambiar el fondo de lectura y ajustar a 3 tamaños de letras. Si se usa un teléfono se puede leer con orientación horizontal.',
     badge: '100 Páginas • Lector en Línea',
     badgeColor: 'bg-indigo-950 text-indigo-300 border-indigo-700/60',
     formatType: 'web',

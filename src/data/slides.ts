@@ -27,7 +27,7 @@ export const PRESENTATION_SLIDES: PresentationSlide[] = [
       {
         title: 'Tierra de Gracia en la Era de la Inteligencia Artificial',
         text: 'Una propuesta estratégica para la construcción del nuevo sistema de educación básica en Venezuela, aprovechando la convergencia de modelos de lenguaje, tutores socráticos e infraestructura autónoma.',
-        footerNote: 'Contacto: Hilmeracastillo@gmail.com',
+        footerNote: 'Contacto: hilmeracastillo@gmail.com',
       },
     ],
   },

@@ -67,8 +67,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-b-5',
-      type: 'paragraph',
-      text: `2.1.1. Alpha Schools`,
+      type: 'heading4',
+      text: `**2.1.1. Alpha Schools**`,
     },
     {
       id: 'p2-b-6',
@@ -142,8 +142,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-b-16',
-      type: 'paragraph',
-      text: `2.1.2. Khanmigo / Khan Academy`,
+      type: 'heading4',
+      text: `**2.1.2. Khanmigo / Khan Academy**`,
     },
     {
       id: 'p2-b-17',
@@ -217,8 +217,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-b-27',
-      type: 'paragraph',
-      text: `2.1.3. Ad Astra / Astra Nova / Synthesis`,
+      type: 'heading4',
+      text: `**2.1.3. Ad Astra / Astra Nova / Synthesis**`,
     },
     {
       id: 'p2-b-28',
@@ -292,8 +292,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-b-38',
-      type: 'paragraph',
-      text: `2.1.4. Acton Academy`,
+      type: 'heading4',
+      text: `**2.1.4. Acton Academy**`,
     },
     {
       id: 'p2-b-39',
@@ -367,8 +367,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-b-49',
-      type: 'paragraph',
-      text: `2.1.5. Squirrel AI (Artificial Intelligence)`,
+      type: 'heading4',
+      text: `**2.1.5. Squirrel AI (Artificial Intelligence)**`,
     },
     {
       id: 'p2-b-50',
@@ -442,8 +442,8 @@ export const part2Chapter: Chapter = {
     },
     {
       id: 'p2-h2-60',
-      type: 'heading2',
-      text: `2.1.8. India - Digital Infrastructure for Knowledge Sharing (DIKSHA) 2.0 + Personalised Adaptive Learning (PAL)`,
+      type: 'heading4',
+      text: `**2.1.8. India - Digital Infrastructure for Knowledge Sharing (DIKSHA) 2.0 + Personalised Adaptive Learning (PAL)**`,
     },
     {
       id: 'p2-b-61',
@@ -514,11 +514,6 @@ export const part2Chapter: Chapter = {
       text: `**•** **Cobertura Geográfica:** Cobertura nacional pública [2.25].`,
       hangingIndent: true,
       footnoteIds: ["fn-2-25"],
-    },
-    {
-      id: 'p2-b-71',
-      type: 'paragraph',
-      text: `**TABLA 2.1. Comparación pedagógica de los casos de estudio**`,
     },
     {
       id: 'p2-tabla-1',
@@ -738,11 +733,6 @@ export const part2Chapter: Chapter = {
       footnoteIds: ["fn-2-5", "fn-2-64"],
     },
     {
-      id: 'p2-b-77',
-      type: 'paragraph',
-      text: `**TABLA 2.2. Software de AI, tiempo semanal de uso y equipamiento requerido por estudiante**`,
-    },
-    {
       id: 'p2-tabla-2',
       type: 'table',
       tableData: {
@@ -926,11 +916,6 @@ export const part2Chapter: Chapter = {
       text: `• Una proporción significativa de iniciativas internacionales basadas en políticas de Estado no desagrega públicamente el tiempo estricto de uso o el costo individualizado del software debido a esquemas de licenciamiento global o plataformas soberanas de código abierto [2.20], [2.37].`,
       hangingIndent: true,
       footnoteIds: ["fn-2-20", "fn-2-37"],
-    },
-    {
-      id: 'p2-b-83',
-      type: 'paragraph',
-      text: `**TABLA 2.3. Costo de software, costo de equipamiento y presencia global**`,
     },
     {
       id: 'p2-tabla-3',

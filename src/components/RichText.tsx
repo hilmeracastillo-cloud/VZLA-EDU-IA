@@ -20,6 +20,69 @@ interface RichTextProps {
  * 3. Citations: [X.Y] -> Interactive Footnote / Reference button
  * 4. Hanging indents (Sangría francesa)
  */
+export interface HangingIndentParse {
+  prefix: string;
+  content: string;
+}
+
+export function parseHangingIndent(rawText: string): HangingIndentParse | null {
+  if (!rawText) return null;
+  const trimmed = rawText.trim();
+
+  // 1. Bold bullet prefix: **• ...** or **•**
+  const boldBulletMatch = trimmed.match(/^\*\*[•\-\*]\s*(.*?)\*\*(.*)$/s);
+  if (boldBulletMatch) {
+    const inner = boldBulletMatch[1].trim();
+    const rest = boldBulletMatch[2];
+    return {
+      prefix: '•',
+      content: inner ? `**${inner}**${rest}` : rest.trim(),
+    };
+  }
+
+  // 2. Plain bullet: • **...** or • ...
+  const bulletMatch = trimmed.match(/^(?:•|\-|\*|\*\*•\*\*|\*•\*)\s*(.*)$/s);
+  if (bulletMatch) {
+    return {
+      prefix: '•',
+      content: bulletMatch[1].trim(),
+    };
+  }
+
+  // 3. Bold numbered prefix: **1. ...** or **a. ...**
+  const boldNumMatch = trimmed.match(/^\*\*(\d+[\.\)]|[a-zA-Z][\.\)])\s*(.*?)\*\*(.*)$/s);
+  if (boldNumMatch) {
+    const numPrefix = boldNumMatch[1];
+    const inner = boldNumMatch[2].trim();
+    const rest = boldNumMatch[3];
+    return {
+      prefix: numPrefix.endsWith('.') || numPrefix.endsWith(')') ? numPrefix : `${numPrefix}.`,
+      content: inner ? `**${inner}**${rest}` : rest.trim(),
+    };
+  }
+
+  // 4. Plain numbered or lettered prefix: 1. or 1) or a. or b)
+  const numMatch = trimmed.match(/^(\d+[\.\)]|[a-zA-Z][\.\)])\s*(.*)$/s);
+  if (numMatch) {
+    const numPrefix = numMatch[1];
+    return {
+      prefix: numPrefix.endsWith('.') || numPrefix.endsWith(')') ? numPrefix : `${numPrefix}.`,
+      content: numMatch[2].trim(),
+    };
+  }
+
+  // 5. Citation / reference code: [2.1] or **[2.1]**
+  const citationMatch = trimmed.match(/^(?:\*\*)?\[(\d+\.\d+)\](?:\*\*)?\s*(.*)$/s);
+  if (citationMatch) {
+    return {
+      prefix: `[${citationMatch[1]}]`,
+      content: citationMatch[2].trim(),
+    };
+  }
+
+  return null;
+}
+
 export const RichText: React.FC<RichTextProps> = ({
   text,
   className = '',
@@ -160,7 +223,27 @@ export const RichText: React.FC<RichTextProps> = ({
 
   const isHanging =
     hangingIndent ||
-    /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\])\s+/i.test(text);
+    /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\]|\*\*[•\-\*]|\*\*(\d+[\.\)]|[a-zA-Z][\.\)]))\s+/i.test(text.trim());
+
+  if (isHanging) {
+    const parsed = parseHangingIndent(text);
+    if (parsed) {
+      return (
+        <span className={`hanging-indent-wrapper inline-flex items-start gap-2.5 sm:gap-3 w-full text-left ${className}`.trim()}>
+          <span className="shrink-0 select-none font-semibold text-indigo-400 min-w-[1.25rem] text-right pt-[1px] leading-relaxed">
+            {parsed.prefix === '•' ? (
+              <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-400 align-middle mb-0.5" />
+            ) : (
+              parsed.prefix
+            )}
+          </span>
+          <span className="flex-1 min-w-0 leading-relaxed">
+            {renderTokens(parsed.content)}
+          </span>
+        </span>
+      );
+    }
+  }
 
   const finalClass = `${isHanging ? 'sangria-francesa ' : ''}${className}`.trim();
 

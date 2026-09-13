@@ -459,7 +459,7 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
                 </h3>
 
                 <p className="text-xs text-neutral-300 leading-relaxed">
-                  Lector digital con índice analítico, aparato crítico con 28+ notas al pie, buscador léxico (<kbd className="px-1 py-0.2 rounded bg-[#1e293b] font-mono text-[10px]">Cmd+K</kbd>), referencias bibliográficas y el Resumen Ejecutivo integrado en su índice.
+                  Propuesta Completa, con referencias activas a lo largo del texto que permiten acceder a las fuentes bibliográficas del documento. El lector puede cambiar el fondo de lectura y ajustar a 3 tamaños de letras. Si se usa un teléfono se puede leer con orientación horizontal.
                 </p>
 
                 <div className="pt-1 text-[11px] text-neutral-400 flex items-center gap-1.5 font-mono">

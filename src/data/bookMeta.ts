@@ -14,9 +14,9 @@ export interface BookMetadata {
 export const bookMeta: BookMetadata = {
   title: 'Venezuela, Educación e Inteligencia Artificial',
   subtitle: 'Tormenta de Oportunidades',
-  program: 'Programa Esta Tierra de Gracia',
+  program: 'Propuesta para el Programa Esta Tierra de Gracia',
   author: 'Hilmer Castillo Bescanza',
-  email: 'Hilmer.castillo@comcast.net',
+  email: 'hilmeracastillo@gmail.com',
   date: 'Septiembre 2026',
   version: '1.0.0',
   totalChapters: 7,

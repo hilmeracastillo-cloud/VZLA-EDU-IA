@@ -9,7 +9,7 @@ import {
 import { caseStudiesList } from '../data/appendix1';
 import { platformsList } from '../data/appendix2';
 import { allFootnotesMap, allReferences } from '../data/articles';
-import { RichText } from './RichText';
+import { RichText, parseHangingIndent } from './RichText';
 import {
   Quote,
   ExternalLink,
@@ -80,6 +80,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       h2: 'text-xl sm:text-2xl',
       h3: 'text-lg sm:text-xl',
       h4: 'text-base sm:text-lg',
+      subheadingPlus2: 'text-[17px] leading-snug',
     },
     base: {
       body: 'text-[17px] leading-[1.75]',
@@ -87,6 +88,7 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       h2: 'text-2xl sm:text-3xl',
       h3: 'text-xl sm:text-2xl',
       h4: 'text-lg sm:text-xl',
+      subheadingPlus2: 'text-[19.5px] leading-snug',
     },
     lg: {
       body: 'text-[19.5px] leading-[1.8]',
@@ -94,8 +96,16 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
       h2: 'text-3xl sm:text-4xl',
       h3: 'text-2xl sm:text-3xl',
       h4: 'text-xl sm:text-2xl',
+      subheadingPlus2: 'text-[22px] leading-snug',
     },
   }[fontSize];
+
+  // Detection helpers for typography requirements
+  const isOportunidadSubtitle = (text: string) =>
+    /^(\*\*)?Oportunidad(es)?\s+\d+/i.test(text.trim());
+
+  const isCaseStudyTitle = (text: string) =>
+    /^(\*\*)?2\.1\.\d+\.\s+/i.test(text.trim());
 
   // Helper to render rich text with bold, italics, citations and hanging indents
   const renderTextWithFootnotes = (text: string, hangingIndent = false) => {
@@ -245,16 +255,30 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                 </div>
               );
 
-            case 'heading2':
+            case 'heading2': {
+              const text = block.text || '';
+              const isCaseStudy = isCaseStudyTitle(text);
+              if (isCaseStudy) {
+                return (
+                  <div key={block.id} id={block.id} className="pt-7 pb-2 scroll-mt-24">
+                    <h4
+                      className={`font-serif font-bold text-white tracking-tight ${fontSizes.subheadingPlus2}`}
+                    >
+                      {renderTextWithFootnotes(text)}
+                    </h4>
+                  </div>
+                );
+              }
               return (
                 <div key={block.id} id={block.id} className="pt-8 sm:pt-10 scroll-mt-24">
                   <h2
                     className={`font-serif font-bold text-white tracking-tight ${fontSizes.h2} pb-2.5 border-b border-[#252525]`}
                   >
-                    {renderTextWithFootnotes(block.text || '')}
+                    {renderTextWithFootnotes(text)}
                   </h2>
                 </div>
               );
+            }
 
             case 'heading3':
               return (
@@ -267,31 +291,55 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                 </div>
               );
 
-            case 'heading4':
+            case 'heading4': {
+              const text = block.text || '';
+              const isCaseStudy = isCaseStudyTitle(text);
+              const isOportunidad = isOportunidadSubtitle(text);
+
               return (
-                <div key={block.id} id={block.id} className="pt-4 pb-1 scroll-mt-20">
+                <div key={block.id} id={block.id} className="pt-6 pb-2 scroll-mt-20">
                   <h4
-                    className={`font-mono text-xs sm:text-sm uppercase tracking-wider font-bold text-amber-300/90 bg-amber-950/20 px-3 py-1.5 rounded-lg border border-amber-800/40 inline-block mb-1`}
+                    className={`font-serif font-bold tracking-tight ${
+                      isCaseStudy || isOportunidad ? 'text-white' : 'text-indigo-200'
+                    } ${fontSizes.subheadingPlus2}`}
                   >
-                    {renderTextWithFootnotes(block.text || '')}
+                    {renderTextWithFootnotes(text)}
                   </h4>
                 </div>
               );
+            }
 
             case 'paragraph': {
+              const text = block.text || '';
+              const isCaseStudy = isCaseStudyTitle(text);
+              const isOportunidad = isOportunidadSubtitle(text);
+
+              if (isCaseStudy || isOportunidad) {
+                return (
+                  <div key={block.id} id={block.id} className="pt-6 pb-2 scroll-mt-20">
+                    <h4
+                      className={`font-serif font-bold text-white tracking-tight ${fontSizes.subheadingPlus2}`}
+                    >
+                      {renderTextWithFootnotes(text)}
+                    </h4>
+                  </div>
+                );
+              }
+
               const isHanging =
                 block.hangingIndent ||
-                /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\])\s+/i.test(block.text || '');
+                /^(•|\d+[\.\)]|[a-zA-Z][\.\)]|\[\d+\.\d+\]|\*\*[•\-\*]|\*\*(\d+[\.\)]|[a-zA-Z][\.\)]))\s+/i.test(
+                  text.trim()
+                );
+
               return (
-                <p
+                <div
                   key={block.id}
                   id={block.id}
-                  className={`font-sans text-neutral-300 ${fontSizes.body} tracking-normal text-justify sm:text-left ${
-                    isHanging ? 'sangria-francesa' : ''
-                  }`}
+                  className={`font-sans text-neutral-300 ${fontSizes.body} tracking-normal text-justify sm:text-left my-2.5`}
                 >
-                  {renderTextWithFootnotes(block.text || '', isHanging)}
-                </p>
+                  {renderTextWithFootnotes(text, isHanging)}
+                </div>
               );
             }
 
@@ -319,27 +367,28 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                 <ol
                   key={block.id}
                   id={block.id}
-                  className="space-y-3 my-4 text-neutral-300 text-[16px] leading-[1.7]"
+                  className={`space-y-3 my-4 text-neutral-300 ${fontSizes.body}`}
                 >
                   {block.items?.map((item, idx) => {
-                    const match = item.match(/^(\d+[\.\)]|[a-zA-Z][\.\)])\s*(.*)/s);
-                    if (match) {
-                      const prefix = match[1].endsWith('.') || match[1].endsWith(')') ? match[1] : `${match[1]}.`;
+                    const parsed = parseHangingIndent(item);
+                    if (parsed) {
                       return (
-                        <li key={idx} className="flex items-start gap-3 pl-1">
-                          <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[24px]">
-                            {prefix}
+                        <li key={idx} className="flex items-start gap-2.5 sm:gap-3 pl-1">
+                          <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[1.25rem] text-right pt-[1px] leading-relaxed">
+                            {parsed.prefix}
                           </span>
-                          <span className="flex-1">{renderTextWithFootnotes(match[2])}</span>
+                          <span className="flex-1 min-w-0 leading-relaxed">
+                            {renderTextWithFootnotes(parsed.content)}
+                          </span>
                         </li>
                       );
                     }
                     return (
-                      <li key={idx} className="flex items-start gap-3 pl-1">
-                        <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[24px]">
+                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 pl-1">
+                        <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[1.25rem] text-right pt-[1px] leading-relaxed">
                           {idx + 1}.
                         </span>
-                        <span className="flex-1">{renderTextWithFootnotes(item)}</span>
+                        <span className="flex-1 min-w-0 leading-relaxed">{renderTextWithFootnotes(item)}</span>
                       </li>
                     );
                   })}
@@ -351,12 +400,23 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                 <ul
                   key={block.id}
                   id={block.id}
-                  className="space-y-2.5 my-4 text-neutral-300 text-[16px] leading-[1.7]"
+                  className={`space-y-2.5 my-4 text-neutral-300 ${fontSizes.body}`}
                 >
                   {block.items?.map((item, idx) => {
                     const trimmed = item.trim();
-                    // Subtitles should never have a dot bullet
-                    const isSubheading = /^(Oportunidades?\s+|Destrezas para La Vida|Objetivos:|Ejemplos de actividades:)/i.test(trimmed);
+                    const isOportunidad = isOportunidadSubtitle(trimmed);
+                    if (isOportunidad) {
+                      return (
+                        <li
+                          key={idx}
+                          className={`pt-5 pb-1 text-white font-serif font-bold ${fontSizes.subheadingPlus2} block list-none`}
+                        >
+                          {renderTextWithFootnotes(item)}
+                        </li>
+                      );
+                    }
+
+                    const isSubheading = /^(Destrezas para La Vida|Objetivos:|Ejemplos de actividades:)/i.test(trimmed);
                     if (isSubheading) {
                       return (
                         <li key={idx} className="pt-3 pb-1 text-white font-serif font-bold text-base block list-none">
@@ -365,25 +425,30 @@ export const ChapterReader: React.FC<ChapterReaderProps> = ({
                       );
                     }
 
-                    // Numbered or lettered items should never have a dot bullet
-                    const numMatch = item.match(/^(\d+[\.\)]|[a-zA-Z][\.\)])\s*(.*)/s);
-                    if (numMatch) {
-                      const prefix = numMatch[1].endsWith('.') || numMatch[1].endsWith(')') ? numMatch[1] : `${numMatch[1]}.`;
+                    // Hanging indent parsed item
+                    const parsed = parseHangingIndent(item);
+                    if (parsed) {
                       return (
-                        <li key={idx} className="flex items-start gap-3 pl-1 list-none">
-                          <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[24px]">
-                            {prefix}
+                        <li key={idx} className="flex items-start gap-2.5 sm:gap-3 pl-1 list-none">
+                          <span className="font-semibold text-indigo-400 shrink-0 select-none min-w-[1.25rem] text-right pt-[1px] leading-relaxed">
+                            {parsed.prefix === '•' ? (
+                              <span className="inline-block w-1.5 h-1.5 rounded-full bg-indigo-400 align-middle mb-0.5" />
+                            ) : (
+                              parsed.prefix
+                            )}
                           </span>
-                          <span className="flex-1">{renderTextWithFootnotes(numMatch[2])}</span>
+                          <span className="flex-1 min-w-0 leading-relaxed">
+                            {renderTextWithFootnotes(parsed.content)}
+                          </span>
                         </li>
                       );
                     }
 
-                    // Unnumbered bullet item
+                    // Unnumbered bullet item fallback
                     return (
-                      <li key={idx} className="flex items-start gap-3 pl-1">
+                      <li key={idx} className="flex items-start gap-2.5 sm:gap-3 pl-1">
                         <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0 mt-2.5" />
-                        <span className="flex-1">{renderTextWithFootnotes(item)}</span>
+                        <span className="flex-1 min-w-0 leading-relaxed">{renderTextWithFootnotes(item)}</span>
                       </li>
                     );
                   })}

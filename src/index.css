@@ -37,6 +37,7 @@ html, body {
 
 /* Sangría francesa (hanging indent) editorial para citas, referencias y listas indentadas */
 .sangria-francesa {
+  display: block;
   padding-left: 1.75rem;
   text-indent: -1.75rem;
 }
@@ -46,6 +47,10 @@ html, body {
     padding-left: 2.25rem;
     text-indent: -2.25rem;
   }
+}
+
+.hanging-indent-wrapper {
+  display: flex !important;
 }
 
 .sangria-francesa-ref {
