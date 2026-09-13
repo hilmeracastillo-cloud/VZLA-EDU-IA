@@ -320,7 +320,7 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
             </div>
 
             {/* ===================================================== */}
-            {/* 3-. Resumen de Video (7 Minutos • YouTube)             */}
+            {/* 3-. Resumen de Video (10 Minutos • Audiovisual)        */}
             {/* ===================================================== */}
             <div className="rounded-2xl border border-rose-900/60 bg-[#160e12] hover:bg-[#1c1217] p-5 flex flex-col justify-between transition-all hover:border-rose-500/70 hover:shadow-xl group">
               <div className="space-y-3">
@@ -334,7 +334,7 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
                     </span>
                   </div>
                   <span className="text-[10.5px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-rose-950 text-rose-300 border border-rose-700/60">
-                    7:00 min • Audiovisual
+                    10:00 min • Audiovisual
                   </span>
                 </div>
 
@@ -343,12 +343,12 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
                 </h3>
 
                 <p className="text-xs text-neutral-300 leading-relaxed">
-                  Recorrido audiovisual de los elementos más relevantes de la propuesta presentada
+                  Recorrido audiovisual en 10 minutos con los elementos más relevantes de la propuesta presentada
                 </p>
 
                 <div className="pt-1 text-[11px] text-neutral-400 flex items-center gap-1.5 font-mono">
                   <span className="text-rose-400 font-bold">Longitud:</span>
-                  <span>7 minutos de duración</span>
+                  <span>10 minutos de duración</span>
                 </div>
               </div>
 
@@ -363,10 +363,11 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
                 </button>
                 <a
                   id="btn-landing-youtube-external"
-                  href="https://youtu.be/v91urPdXtWc?si=eiQAG5ZQU_SNCxoo"
+                  href="https://youtu.be/DgbAiGmCH2Y"
                   target="_blank"
                   rel="noreferrer"
                   className="py-2.5 px-2 rounded-xl bg-[#26181e] hover:bg-[#321f28] border border-rose-800/50 text-rose-200 font-medium text-xs flex items-center justify-center gap-1.5 transition-all text-center cursor-pointer"
+                  title="Ver en YouTube (https://youtu.be/DgbAiGmCH2Y)"
                 >
                   <Youtube className="w-3.5 h-3.5 text-rose-400" />
                   <span>En YouTube</span>
@@ -551,6 +552,7 @@ export const LandingCover: React.FC<LandingCoverProps> = ({
         isOpen={activeVideoModal}
         resource={videoResource}
         onClose={() => setActiveVideoModal(false)}
+        initialTab="youtube"
       />
 
       <InfographicViewerModal
