@@ -79,13 +79,12 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="btn-header-back-menu"
               onClick={onBackToLanding}
-              aria-label="Regresar al Menú de Opciones"
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-neutral-200 bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] hover:border-indigo-500/60 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
-              title="Regresar al Menú de Opciones"
+              aria-label="Regresar al Menú de opciones"
+              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-neutral-200 bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] hover:border-indigo-500/60 hover:text-white transition-all cursor-pointer shadow-sm shrink-0 whitespace-nowrap"
+              title="Regresar al Menú de opciones"
             >
               <ArrowLeft className="w-4 h-4 text-indigo-400 shrink-0" />
-              <span className="hidden xs:inline">Menú de Opciones</span>
-              <span className="xs:hidden">Menú</span>
+              <span>Menú de opciones</span>
             </button>
           )}
 

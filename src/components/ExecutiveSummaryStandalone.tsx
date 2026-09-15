@@ -66,11 +66,11 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
           <button
             id="btn-standalone-back-menu"
             onClick={onBackToMenu}
-            aria-label="Regresar al Menú de Opciones"
+            aria-label="Regresar al Menú de opciones"
             className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-neutral-200 bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] hover:border-cyan-500/60 hover:text-white transition-all cursor-pointer shadow-sm"
           >
             <ArrowLeft className="w-4 h-4 text-cyan-400" />
-            <span>Menú de Opciones</span>
+            <span>Menú de opciones</span>
           </button>
 
           {/* Center Identity */}
@@ -379,10 +379,11 @@ export const ExecutiveSummaryStandalone: React.FC<ExecutiveSummaryStandaloneProp
         <div className="pt-8 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between gap-4">
           <button
             onClick={onBackToMenu}
+            aria-label="Regresar al Menú de opciones"
             className="w-full sm:w-auto px-5 py-3 rounded-xl bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] hover:border-cyan-500/60 text-white font-medium text-xs sm:text-sm flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-cyan-400" />
-            <span>Volver al Menú de Opciones</span>
+            <span>Menú de opciones</span>
           </button>
 
           <button

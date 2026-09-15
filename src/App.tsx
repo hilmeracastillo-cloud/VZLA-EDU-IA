@@ -218,7 +218,7 @@ export function App() {
               onClick={handleReturnToLanding}
               className="hover:underline cursor-pointer"
             >
-              ← Volver al Menú de Opciones
+              ← Menú de opciones
             </button>
             <span>•</span>
             <button
