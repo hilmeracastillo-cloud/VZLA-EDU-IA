@@ -7,7 +7,7 @@ import {
   Type,
   Download,
   Layers,
-  Home,
+  ArrowLeft,
 } from 'lucide-react';
 import { Chapter, FontSize } from '../types';
 import { allChapters } from '../data/articles';
@@ -65,16 +65,17 @@ export const MobileNavBar: React.FC<MobileNavBarProps> = ({
       </div>
 
       <div className="max-w-md mx-auto px-3 py-1.5 flex items-center justify-between gap-1 text-xs">
-        {/* Portada Button */}
+        {/* Menú de Opciones Button */}
         {onBackToLanding && (
           <button
+            id="btn-mobile-back-menu"
             onClick={onBackToLanding}
-            aria-label="Volver a la Portada y Menú de Opciones"
+            aria-label="Regresar al Menú de Opciones"
             className="flex flex-col items-center justify-center p-2 rounded-xl text-neutral-300 hover:text-white hover:bg-neutral-800/60 transition-all active:scale-95 cursor-pointer min-w-[46px]"
-            title="Portada y Menú de Opciones"
+            title="Regresar al Menú de Opciones"
           >
-            <Home className="w-4 h-4 mb-0.5 text-neutral-300" />
-            <span className="text-[10px] font-medium">Portada</span>
+            <ArrowLeft className="w-4 h-4 mb-0.5 text-indigo-400" />
+            <span className="text-[10px] font-medium">Menú</span>
           </button>
         )}
 

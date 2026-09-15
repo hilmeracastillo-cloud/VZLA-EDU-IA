@@ -8,7 +8,7 @@ import {
   Check,
   Smartphone,
   Layers,
-  Home,
+  ArrowLeft,
   Mail,
 } from 'lucide-react';
 import { Chapter, FontSize } from '../types';
@@ -77,14 +77,15 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Back to Landing / Menú de Opciones */}
           {onBackToLanding && (
             <button
-              id="btn-header-back-landing"
+              id="btn-header-back-menu"
               onClick={onBackToLanding}
-              aria-label="Volver a la Portada y Menú de Opciones"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-neutral-300 bg-[#141414] hover:bg-[#202020] border border-[#2b2b2b] hover:border-neutral-500 hover:text-white transition-all cursor-pointer shrink-0"
-              title="Volver a la portada de la obra y menú de opciones"
+              aria-label="Regresar al Menú de Opciones"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold text-neutral-200 bg-[#141414] hover:bg-[#202020] border border-[#2e2e2e] hover:border-indigo-500/60 hover:text-white transition-all cursor-pointer shadow-sm shrink-0"
+              title="Regresar al Menú de Opciones"
             >
-              <Home className="w-3.5 h-3.5 text-neutral-400" />
-              <span className="hidden sm:inline text-xs">Portada</span>
+              <ArrowLeft className="w-4 h-4 text-indigo-400 shrink-0" />
+              <span className="hidden xs:inline">Menú de Opciones</span>
+              <span className="xs:hidden">Menú</span>
             </button>
           )}
 
